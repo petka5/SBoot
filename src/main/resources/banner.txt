@@ -1,0 +1,10 @@
+${Ansi.GREEN}${AnsiStyle.BOLD}
+${Ansi.GREEN}.______    _______ .___________. __  ___      ___
+${Ansi.GREEN}|   _  \  |   ____||           ||  |/  /     /   \
+${Ansi.GREEN}|  |_)  | |  |__   `---|  |----`|  '  /     /  ^  \
+${Ansi.GREEN}|   ___/  |   __|      |  |     |    <     /  /_\  \
+${Ansi.GREEN}|  |      |  |____     |  |     |  .  \   /  _____  \
+${Ansi.GREEN}| _|      |_______|    |__|     |__|\__\ /__/     \__\
+${Ansi.RED} :: Application ${Ansi.GREEN}${application.title} - ${application.version}(${git.branch} - ${git.commit.id} : ${git.tags})${Ansi.RED} ::
+${Ansi.RED} :: Build Java Version ${Ansi.GREEN}${build.java.version}${Ansi.RED} ::
+${Ansi.RED} :: Spring Boot${Ansi.GREEN}${spring-boot.formatted-version}${Ansi.RED} :: ${Ansi.DEFAULT}
