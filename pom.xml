@@ -36,6 +36,17 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security.oauth</groupId>
+			<artifactId>spring-security-oauth2</artifactId>
+			<version>2.3.4.RELEASE</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
@@ -56,6 +67,16 @@
 					<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
 					<verbose>true</verbose>
 					<prefix>git</prefix>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>pl.coderion.mongodb</groupId>
+				<artifactId>mongeez-maven-plugin</artifactId>
+				<version>0.9.3</version>
+				<configuration>
+					<dbName>sboot</dbName>
+					<changeLogFile>src/main/mongeez/mongeez.xml</changeLogFile>
 				</configuration>
 			</plugin>
 		</plugins>

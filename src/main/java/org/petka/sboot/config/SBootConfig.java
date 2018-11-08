@@ -1,4 +1,4 @@
-package org.petka.sboot.org.petka.sboot.config;
+package org.petka.sboot.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

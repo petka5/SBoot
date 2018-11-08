@@ -1,0 +1,142 @@
+{
+	"info": {
+		"_postman_id": "d252105f-01d4-42b8-9f0e-b5ff189e73ab",
+		"name": "SBoot",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "#/system/versionInfo",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "4885b9c8-3fb9-40ab-9434-5273ca6ef22b",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "447f3b73-895b-4e1a-85f6-90db9941811e",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "{{sBootURL}}/system/versionInfo",
+					"host": [
+						"{{sBootURL}}"
+					],
+					"path": [
+						"system",
+						"versionInfo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/oauth/token",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "4885b9c8-3fb9-40ab-9434-5273ca6ef22b",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "447f3b73-895b-4e1a-85f6-90db9941811e",
+						"exec": [
+							"var json = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"access_token\", json.access_token);",
+							"postman.setEnvironmentVariable(\"refresh_token\", json.refresh_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "petka",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "petka-client",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "petka",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "petka",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{sBootURL}}/oauth/token",
+					"host": [
+						"{{sBootURL}}"
+					],
+					"path": [
+						"oauth",
+						"token"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
