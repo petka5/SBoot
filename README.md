@@ -16,4 +16,5 @@ Used links:
 * Security implementation
 ```  
 https://www.devglan.com/spring-security/spring-boot-security-oauth2-example
+https://github.com/caelwinner/spring-security-mongo/tree/master/src/main/java/uk/co/caeldev/springsecuritymongo
 ```

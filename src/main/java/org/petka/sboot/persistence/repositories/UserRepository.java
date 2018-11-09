@@ -1,4 +1,4 @@
-package org.petka.sboot.persistence.dao;
+package org.petka.sboot.persistence.repositories;
 
 
 import org.bson.types.ObjectId;
@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 
-public interface UserDao extends CrudRepository<User, ObjectId> {
+public interface UserRepository extends CrudRepository<User, ObjectId> {
 
     @Query("{ 'username': :#{#username}, 'status': 'ENABLED'}")
     User findByUsername(@Param("username") String username);

@@ -1,7 +1,7 @@
 package org.petka.sboot.security;
 
 import org.petka.sboot.persistence.documents.User;
-import org.petka.sboot.persistence.dao.UserDao;
+import org.petka.sboot.persistence.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,10 +17,10 @@ import java.util.List;
 public class UserAuthenticationService implements UserDetailsService {
 
     @Autowired
-    private UserDao userDao;
+    private UserRepository userRepository;
 
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        User user = userDao.findByUsername(userId);
+        User user = userRepository.findByUsername(userId);
         if (user == null) {
             throw new UsernameNotFoundException("Invalid username or password.");
         }
@@ -33,7 +33,7 @@ public class UserAuthenticationService implements UserDetailsService {
 
     public List findAll() {
         List list = new ArrayList<>();
-        userDao.findAll().iterator().forEachRemaining(list::add);
+        userRepository.findAll().iterator().forEachRemaining(list::add);
         return list;
     }
 }
