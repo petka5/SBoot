@@ -17,4 +17,5 @@ Used links:
 ```  
 https://www.devglan.com/spring-security/spring-boot-security-oauth2-example
 https://github.com/caelwinner/spring-security-mongo/tree/master/src/main/java/uk/co/caeldev/springsecuritymongo
+https://github.com/sharmaritesh/oauth2-spring-boot-mongo/tree/master/auth-server/src/main/java/com/rites/sample/oauth2/authserver/library
 ```
