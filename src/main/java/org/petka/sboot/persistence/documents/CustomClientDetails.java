@@ -9,28 +9,18 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-@Document(collection = "client_details")
-public class MongoClientDetails implements ClientDetails {
-    public static final String CLIENT_ID = "clientId";
-    public static final String CLIENT_SECRET = "clientSecret";
-    public static final String RESOURCE_IDS = "resourceIds";
-    public static final String SCOPE = "scope";
-    public static final String AUTHORIZED_GRANT_TYPES = "authorizedGrantTypes";
-    public static final String REGISTERED_REDIRECT_URI = "registeredRedirectUri";
-    public static final String AUTHORITIES = "authorities";
-    public static final String ACCESS_TOKEN_VALIDITY_SECONDS = "accessTokenValiditySeconds";
-    public static final String REFRESH_TOKEN_VALIDITY_SECONDS = "refreshTokenValiditySeconds";
-    public static final String ADDITIONAL_INFORMATION = "additionalInformation";
+@Document(collection = "clientDetails")
+public class CustomClientDetails implements ClientDetails {
 
-    public MongoClientDetails() {
+    public CustomClientDetails() {
 
     }
 
-    public MongoClientDetails(String clientId, Set<String> resourceIds, boolean secretRequired, String clientSecret,
-                              boolean scoped, Set<String> scope, Set<String> authorizedGrantTypes,
-                              Set<String> registeredRedirectUri, Collection<GrantedAuthority> authorities,
-                              Integer accessTokenValiditySeconds, Integer refreshTokenValiditySeconds,
-                              boolean autoApprove, Map<String, Object> additionalInformation) {
+    public CustomClientDetails(String clientId, Set<String> resourceIds, boolean secretRequired, String clientSecret,
+                               boolean scoped, Set<String> scope, Set<String> authorizedGrantTypes,
+                               Set<String> registeredRedirectUri, Collection<GrantedAuthority> authorities,
+                               Integer accessTokenValiditySeconds, Integer refreshTokenValiditySeconds,
+                               boolean autoApprove, Map<String, Object> additionalInformation) {
         this.clientId = clientId;
         this.resourceIds = resourceIds;
         this.secretRequired = secretRequired;

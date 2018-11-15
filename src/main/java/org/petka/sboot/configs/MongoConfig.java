@@ -1,4 +1,4 @@
-package org.petka.sboot.config;
+package org.petka.sboot.configs;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -6,21 +6,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Configuration
+//@Configuration
 public class MongoConfig {
 
     @Autowired
-    List<Converter<?,?>> customConverters;
+    List<Converter<?, ?>> customConverters;
 
     @Bean
-    public MongoCustomConversions customConversions(){
-        //List<Converter<?,?>> converters = new ArrayList<>();
-        //converters.add(ReferenceWriterConverter.INSTANCE);
-        //return new MongoCustomConversions(converters);
+    public MongoCustomConversions customConversions() {
         return new MongoCustomConversions(customConverters);
-
     }
 }

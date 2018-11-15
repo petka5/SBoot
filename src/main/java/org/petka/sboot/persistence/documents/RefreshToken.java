@@ -6,10 +6,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
-@Document(collection = "refresh_token")
-public class MongoRefreshToken {
-
-    public static final String TOKEN_ID = "tokenId";
+@Document(collection = "refreshTokens")
+public class RefreshToken {
 
     @Id
     private String id;
