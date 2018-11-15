@@ -3,10 +3,8 @@ package org.petka.sboot.security;
 import org.petka.sboot.persistence.documents.MongoAccessToken;
 import org.petka.sboot.persistence.documents.MongoRefreshToken;
 import org.petka.sboot.persistence.repositories.MongoAccessTokenRepository;
+import org.petka.sboot.persistence.repositories.MongoRefreshTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -25,13 +23,15 @@ import java.util.List;
 
 @Component
 public class MongoTokenStore implements TokenStore {
+
     private AuthenticationKeyGenerator authenticationKeyGenerator = new DefaultAuthenticationKeyGenerator();
 
-    @Autowired
-    private MongoTemplate mongoTemplate;
 
     @Autowired
     private MongoAccessTokenRepository mongoAccessTokenRepository;
+
+    @Autowired
+    private MongoRefreshTokenRepository mongoRefreshTokenRepository;
 
     @Override
     public OAuth2Authentication readAuthentication(OAuth2AccessToken accessToken) {
@@ -40,11 +40,7 @@ public class MongoTokenStore implements TokenStore {
 
     @Override
     public OAuth2Authentication readAuthentication(String token) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where(MongoAccessToken.TOKEN_ID).is(extractTokenKey(token)));
-
-        MongoAccessToken mongoAccessToken = mongoTemplate.findOne(query, MongoAccessToken.class);
-        //MongoAccessToken mongoAccessToken = mongoAccessTokenRepository.findByTokenId()
+        MongoAccessToken mongoAccessToken = mongoAccessTokenRepository.findByTokenId(extractTokenKey(token));
         return mongoAccessToken != null ? mongoAccessToken.getAuthentication() : null;
     }
 
@@ -68,23 +64,22 @@ public class MongoTokenStore implements TokenStore {
         mongoAccessToken.setAuthentication(authentication);
         mongoAccessToken.setRefreshToken(extractTokenKey(refreshToken));
 
-        mongoTemplate.save(mongoAccessToken);
+        mongoAccessTokenRepository.save(mongoAccessToken);
     }
 
     @Override
     public OAuth2AccessToken readAccessToken(String tokenValue) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where(MongoAccessToken.TOKEN_ID).is(extractTokenKey(tokenValue)));
+        // Chekc if it works
+        MongoAccessToken mongoAccessToken = mongoAccessTokenRepository.findByTokenId(extractTokenKey(tokenValue));
 
-        MongoAccessToken mongoAccessToken = mongoTemplate.findOne(query, MongoAccessToken.class);
         return mongoAccessToken != null ? mongoAccessToken.getToken() : null;
     }
 
     @Override
     public void removeAccessToken(OAuth2AccessToken oAuth2AccessToken) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where(MongoAccessToken.TOKEN_ID).is(extractTokenKey(oAuth2AccessToken.getValue())));
-        mongoTemplate.remove(query, MongoAccessToken.class);
+        MongoAccessToken mongoAccessToken = mongoAccessTokenRepository.findByTokenId(extractTokenKey(oAuth2AccessToken.getValue()));
+
+        mongoAccessTokenRepository.delete(mongoAccessToken);
     }
 
     @Override
@@ -93,39 +88,31 @@ public class MongoTokenStore implements TokenStore {
         token.setTokenId(extractTokenKey(refreshToken.getValue()));
         token.setToken(refreshToken);
         token.setAuthentication(authentication);
-        mongoTemplate.save(token);
+        mongoRefreshTokenRepository.save(token);
     }
 
     @Override
     public OAuth2RefreshToken readRefreshToken(String tokenValue) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where(MongoRefreshToken.TOKEN_ID).is(extractTokenKey(tokenValue)));
-
-        MongoRefreshToken mongoRefreshToken = mongoTemplate.findOne(query, MongoRefreshToken.class);
+        MongoRefreshToken mongoRefreshToken = mongoRefreshTokenRepository.findByTokenId(extractTokenKey(tokenValue));
         return mongoRefreshToken != null ? mongoRefreshToken.getToken() : null;
     }
 
     @Override
     public OAuth2Authentication readAuthenticationForRefreshToken(OAuth2RefreshToken refreshToken) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where(MongoRefreshToken.TOKEN_ID).is(extractTokenKey(refreshToken.getValue())));
-
-        MongoRefreshToken mongoRefreshToken = mongoTemplate.findOne(query, MongoRefreshToken.class);
+        MongoRefreshToken mongoRefreshToken = mongoRefreshTokenRepository.findByTokenId(extractTokenKey(refreshToken.getValue()));
         return mongoRefreshToken != null ? mongoRefreshToken.getAuthentication() : null;
     }
 
     @Override
     public void removeRefreshToken(OAuth2RefreshToken refreshToken) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where(MongoRefreshToken.TOKEN_ID).is(extractTokenKey(refreshToken.getValue())));
-        mongoTemplate.remove(query, MongoRefreshToken.class);
+        MongoRefreshToken mongoRefreshToken = mongoRefreshTokenRepository.findByTokenId(extractTokenKey(refreshToken.getValue()));
+        mongoRefreshTokenRepository.delete(mongoRefreshToken);
     }
 
     @Override
     public void removeAccessTokenUsingRefreshToken(OAuth2RefreshToken refreshToken) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where(MongoAccessToken.REFRESH_TOKEN).is(extractTokenKey(refreshToken.getValue())));
-        mongoTemplate.remove(query, MongoAccessToken.class);
+        MongoAccessToken accessToken = mongoAccessTokenRepository.findByRefreshToken(extractTokenKey(refreshToken.getValue()));
+        mongoAccessTokenRepository.delete(accessToken);
     }
 
     @Override
@@ -133,10 +120,8 @@ public class MongoTokenStore implements TokenStore {
         OAuth2AccessToken accessToken = null;
         String authenticationId = authenticationKeyGenerator.extractKey(authentication);
 
-        Query query = new Query();
-        query.addCriteria(Criteria.where(MongoAccessToken.AUTHENTICATION_ID).is(authenticationId));
+        MongoAccessToken mongoAccessToken = mongoAccessTokenRepository.findByAuthenticationId(authenticationId);
 
-        MongoAccessToken mongoAccessToken = mongoTemplate.findOne(query, MongoAccessToken.class);
         if (mongoAccessToken != null) {
             accessToken = mongoAccessToken.getToken();
             if (accessToken != null && !authenticationId.equals(this.authenticationKeyGenerator.extractKey(this.readAuthentication(accessToken)))) {
@@ -150,10 +135,7 @@ public class MongoTokenStore implements TokenStore {
     @Override
     public Collection<OAuth2AccessToken> findTokensByClientIdAndUserName(String clientId, String username) {
         Collection<OAuth2AccessToken> tokens = new ArrayList<OAuth2AccessToken>();
-        Query query = new Query();
-        query.addCriteria(Criteria.where(MongoAccessToken.CLIENT_ID).is(clientId));
-        query.addCriteria(Criteria.where(MongoAccessToken.USERNAME).is(username));
-        List<MongoAccessToken> accessTokens = mongoTemplate.find(query, MongoAccessToken.class);
+        List<MongoAccessToken> accessTokens = mongoAccessTokenRepository.findByClientIdAndUsername(clientId, username);
         for (MongoAccessToken accessToken : accessTokens) {
             tokens.add(accessToken.getToken());
         }
@@ -163,9 +145,7 @@ public class MongoTokenStore implements TokenStore {
     @Override
     public Collection<OAuth2AccessToken> findTokensByClientId(String clientId) {
         Collection<OAuth2AccessToken> tokens = new ArrayList<OAuth2AccessToken>();
-        Query query = new Query();
-        query.addCriteria(Criteria.where(MongoAccessToken.CLIENT_ID).is(clientId));
-        List<MongoAccessToken> accessTokens = mongoTemplate.find(query, MongoAccessToken.class);
+        List<MongoAccessToken> accessTokens = mongoAccessTokenRepository.findAllByClientId(clientId);
         for (MongoAccessToken accessToken : accessTokens) {
             tokens.add(accessToken.getToken());
         }

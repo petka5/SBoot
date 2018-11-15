@@ -28,6 +28,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource(name = "userAuthenticationService")
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private MongoTokenStore mongoTokenStore;
+
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -48,7 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public TokenStore tokenStore() {
-        return new InMemoryTokenStore();
+        //return new InMemoryTokenStore();
+        return mongoTokenStore;
     }
 
     @Bean
