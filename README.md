@@ -19,4 +19,5 @@ https://www.devglan.com/spring-security/spring-boot-security-oauth2-example
 https://github.com/caelwinner/spring-security-mongo/tree/master/src/main/java/uk/co/caeldev/springsecuritymongo
 https://github.com/sharmaritesh/oauth2-spring-boot-mongo/tree/master/auth-server/src/main/java/com/rites/sample/oauth2/authserver/library
 https://github.com/spring-guides/tut-spring-boot-oauth2
+https://github.com/callicoder/spring-boot-react-oauth2-social-login-demo
 ```

@@ -23,11 +23,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private CustomClientDetailsService mongoClientDetailsService;
+    private CustomClientDetailsService customClientDetailsService;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
-        configurer.withClientDetails(mongoClientDetailsService);
+        configurer.withClientDetails(customClientDetailsService);
     }
 
     @Override
