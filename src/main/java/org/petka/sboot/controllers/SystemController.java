@@ -1,6 +1,8 @@
 package org.petka.sboot.controllers;
 
 
+import org.petka.sboot.services.ActiveMQService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,9 +45,13 @@ public class SystemController {
     @Value("${spring.application.version}")
     private String version;
 
+    @Autowired
+    private ActiveMQService service;
 
     @RequestMapping(value = "/versionInfo", method = RequestMethod.POST)
     public Map<String, String> getVersionInfo() {
+        service.send("sfgb");
+
         Map<String, String> result = new TreeMap<>();
         result.put("Application name", applicationName);
         result.put("Commit message", commitMessage);
